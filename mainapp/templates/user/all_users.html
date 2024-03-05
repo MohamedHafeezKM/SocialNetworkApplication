@@ -1,0 +1,87 @@
+{% extends 'user/base.html' %}
+
+{%block content%}
+
+<br><br>
+{%for m in messages%}
+      {{m}}
+    {%endfor%}
+
+<div class="container">
+    <div class="row">
+        <div >
+            <form action="" method="post" class="d-flex justify-content-center mb-3">
+                {%csrf_token%}
+                <input type="text" class="form-control" name="box"  placeholder="search users">
+                <button class="btn btn-outline-primary" >Search</button>
+            </form>
+        </div>
+        {%if qs%}
+        <table class="table">
+        
+            {%for user in qs%}
+            <tr>
+                <td>{%if user.profile_picture%}
+                    <img src="{{user.user.profile.profile_picture.url}}" alt="" width="40px" height="40px">
+                   {%endif%}
+                </td>
+                <td>{{user.full_name}}</td>
+                
+                <td>
+                    <form action="{%url 'follow' user.user.id%}" method="post">
+                        {%csrf_token%}
+                        {%if user.user in request.user.profile.following.all%}
+                        <button type="submit" name="action" value="unfollow">Unfollow</button>
+                        {%elif user.user == request.user%}
+                        <strong>N/A</strong>
+                        {%else%}
+                        <button type="submit" name="action" value="follow">Follow</button>
+                        {%endif%}
+                    </form>
+                </td>
+                
+            </tr>
+            {%endfor%}
+         </table>
+
+        {%else%}
+         <table class="table">
+        
+            {%for user in all_users%}
+            <tr>
+                <td>{%if user.profile_picture%}
+                    <img src="{{user.user.profile.profile_picture.url}}" alt="" width="40px" height="40px">
+                   {%endif%}
+                </td>
+                <td>{{user.full_name}}</td>
+                
+                <td>
+                    <form action="{%url 'follow' user.user.id%}" method="post">
+                        {%csrf_token%}
+                        {%if user.user in request.user.profile.following.all%}
+                        <button type="submit" name="action" value="unfollow">Unfollow</button>
+                        {%elif user.user == request.user%}
+                        <strong>N/A</strong>
+                        {%else%}
+                        <button type="submit" name="action" value="follow">Follow</button>
+                        {%endif%}
+                    </form>
+                </td>
+                
+            </tr>
+            {%endfor%}
+         </table>
+         {%endif%}
+
+
+        
+        
+
+    </div>
+</div>
+
+
+
+
+
+{%endblock%}
